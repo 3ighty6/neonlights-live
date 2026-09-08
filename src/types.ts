@@ -19,8 +19,6 @@ export interface User {
   price_per_minute_tokens?: number | null
   id_verification_status?: string | null
   ai_disclosure?: string | null
-  stripe_connect_id?: string | null
-  stripe_connect_onboarded?: boolean
   referral_code?: string | null
   referred_by?: string | null
   created_at: string

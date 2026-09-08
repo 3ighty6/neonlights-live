@@ -3,7 +3,7 @@ import { Session } from '@supabase/supabase-js'
 import Hls from 'hls.js'
 import { Play, Trash2, Eye, Lock, Upload, X, Loader2, ShoppingCart } from 'lucide-react'
 import { supabase } from '../supabaseClient'
-import { TOKEN_PACKAGES, createTokenCheckout } from '../lib/stripe'
+import { TOKEN_PACKAGES, createTokenCheckout } from '../lib/payments'
 import TagAndEarn from '../components/TagAndEarn'
 import ContentReviews from '../components/ContentReviews'
 

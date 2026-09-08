@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Session } from '@supabase/supabase-js'
 import { Star, Plus, Trash2, Lock, Unlock, X, ShoppingCart } from 'lucide-react'
 import { supabase } from '../supabaseClient'
-import { TOKEN_PACKAGES, createTokenCheckout } from '../lib/stripe'
+import { TOKEN_PACKAGES, createTokenCheckout } from '../lib/payments'
 
 interface Perk {
   id: string

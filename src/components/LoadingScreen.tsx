@@ -23,7 +23,7 @@ export default function LoadingScreen() {
             <img src={logoWordmark} alt="NeonLights" className="w-[92%] h-[92%] rounded-full object-cover" />
           </div>
         </div>
-        <div className="neon-banner-text text-2xl tracking-widest mb-2">NEONLIGHTS.COM</div>
+        <div className="neon-banner-text text-2xl tracking-widest mb-2">NEONLIGHTS.CAM</div>
         <div className="text-gray-500 text-sm animate-pulse">Loading…</div>
       </div>
 

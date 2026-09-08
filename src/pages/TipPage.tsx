@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Zap, Loader2 } from 'lucide-react'
-import { TOKEN_PACKAGES, calculateTokens, createTokenCheckout } from '../lib/stripe'
+import { TOKEN_PACKAGES, calculateTokens, createTokenCheckout } from '../lib/payments'
 import { supabase } from '../supabaseClient'
 
 export default function TipPage() {
@@ -117,7 +117,7 @@ export default function TipPage() {
           </div>
 
           <div className="mt-6 p-4 bg-blue-500/10 border border-blue-500/20 rounded text-sm text-gray-300">
-            <strong>🔒 Secure:</strong> Payments are processed by Stripe. Card details never touch our servers.
+            <strong>🔒 Secure:</strong> Payments are processed via NOWPayments (Bitcoin/USDC). Wallet details never touch our servers.
           </div>
         </div>
       </div>

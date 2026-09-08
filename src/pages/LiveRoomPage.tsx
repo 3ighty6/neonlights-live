@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Session } from '@supabase/supabase-js'
 import Hls from 'hls.js'
 import { supabase } from '../supabaseClient'
-import { TOKEN_PACKAGES, createTokenCheckout } from '../lib/stripe'
+import { TOKEN_PACKAGES, createTokenCheckout } from '../lib/payments'
 import { Heart, HeartOff, Users, Share2, ArrowLeft, ShoppingCart, Flag, X } from 'lucide-react'
 import RoomChat from '../components/RoomChat'
 

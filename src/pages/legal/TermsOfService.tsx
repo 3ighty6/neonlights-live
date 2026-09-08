@@ -76,16 +76,15 @@ const TermsOfService: React.FC = () => {
               <li>Creator subscriptions (Boost/Featured/Elite): Platform-paid promotion tiers, billed directly to the creator</li>
               <li>Viewer VIP membership: Recurring viewer subscription; does not pay out to creators</li>
             </ul>
-            <p className="mt-4"><strong>Payouts:</strong> Creators can withdraw earnings monthly via Stripe Connect. Minimum payout: $50. Payouts processed within 3-5 business days.</p>
+            <p className="mt-4"><strong>Payouts:</strong> Creators can request a payout of their available balance to Paxum at any time. Minimum payout: $10. Payouts are reviewed and sent by hand, typically within a few business days.</p>
             <p><strong>Refunds:</strong> Transactions are generally non-refundable. Disputed charges must be reported within 30 days.</p>
           </section>
 
           <section>
             <h2 className="text-2xl font-bold text-cyan-400 mb-4">7. Payment Processing & Security</h2>
             <ul className="list-disc list-inside space-y-2 ml-4">
-              <li>All payments processed securely via Stripe</li>
-              <li>Credit card information is encrypted and never stored on NeonLights servers</li>
-              <li>Chargebacks subject to fees and account suspension</li>
+              <li>Token purchases are processed via NOWPayments (Bitcoin and USDC); we never see or store your wallet's private keys</li>
+              <li>Creator payouts are sent via Paxum to the email you provide in settings</li>
               <li>Fraud prevention measures are in place and enforced</li>
             </ul>
           </section>

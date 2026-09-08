@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { X, Zap, Gift } from 'lucide-react'
-import { TOKEN_PACKAGES, createTokenCheckout, cheapestPackageCovering } from '../lib/stripe'
+import { TOKEN_PACKAGES, createTokenCheckout, cheapestPackageCovering } from '../lib/payments'
 import { supabase } from '../supabaseClient'
 
 interface TokenPurchaseModalProps {
@@ -12,6 +12,8 @@ interface TokenPurchaseModalProps {
   /** Short reason shown at the top, e.g. "You need 40 more tokens to send that tip." */
   reason?: string
   returnRoomId?: string
+  /** Cost of the subscription/renewal this purchase is feeding, if any — used to suggest a multi-cycle reserve bundle. */
+  renewalCostTokens?: number
 }
 
 export default function TokenPurchaseModal({
@@ -21,6 +23,7 @@ export default function TokenPurchaseModal({
   shortfallTokens,
   reason,
   returnRoomId,
+  renewalCostTokens,
 }: TokenPurchaseModalProps) {
   const [loadingIdx, setLoadingIdx] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -46,6 +49,7 @@ export default function TokenPurchaseModal({
   if (!isOpen) return null
 
   const suggestedIdx = shortfallTokens ? cheapestPackageCovering(shortfallTokens) : null
+  const reserveIdx = renewalCostTokens ? cheapestPackageCovering(renewalCostTokens * 3) : null
 
   const handleBuy = async (idx: number) => {
     setError(null)
@@ -98,6 +102,7 @@ export default function TokenPurchaseModal({
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {TOKEN_PACKAGES.map((pkg, idx) => {
             const isSuggested = suggestedIdx === idx
+            const isReserve = !isSuggested && reserveIdx === idx
             const isPopular = pkg.popular
             return (
               <button
@@ -107,18 +112,20 @@ export default function TokenPurchaseModal({
                 className={`relative text-left p-4 rounded-xl border transition disabled:opacity-50 ${
                   isSuggested
                     ? 'bg-pink-500/10 border-pink-500 ring-2 ring-pink-500/40'
+                    : isReserve
+                    ? 'bg-amber-500/10 border-amber-500 ring-2 ring-amber-500/40'
                     : isPopular
                     ? 'bg-cyan-500/10 border-cyan-500/50 ring-2 ring-cyan-500/30'
                     : 'bg-white/5 border-white/10 hover:border-cyan-400/40'
                 }`}
               >
-                {(isSuggested || isPopular) && (
+                {(isSuggested || isReserve || isPopular) && (
                   <div
                     className={`absolute -top-2 left-3 px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                      isSuggested ? 'bg-pink-500 text-white' : 'bg-cyan-500 text-black'
+                      isSuggested ? 'bg-pink-500 text-white' : isReserve ? 'bg-amber-500 text-black' : 'bg-cyan-500 text-black'
                     }`}
                   >
-                    {isSuggested ? 'COVERS IT' : 'MOST POPULAR'}
+                    {isSuggested ? 'COVERS IT' : isReserve ? '3 CYCLES' : 'MOST POPULAR'}
                   </div>
                 )}
                 <div className="text-2xl font-bold text-white">{pkg.tokens.toLocaleString()}</div>
@@ -134,7 +141,7 @@ export default function TokenPurchaseModal({
         </div>
 
         <p className="text-xs text-gray-500 mt-5 text-center">
-          Tokens never expire. Secure checkout via Stripe.
+          Tokens never expire. Secure checkout via Bitcoin or USDC.
         </p>
       </div>
     </div>

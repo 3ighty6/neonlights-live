@@ -215,19 +215,19 @@ export interface AIDisclosureProps {
  * 4. PPV live events - Premium content
  * 5. Referral bonuses - If their content drives signups
  *
- * Payouts handled same as human creators via Stripe Connect
+ * Payouts handled same as human creators via Paxum
  * (If AI creator is partnered with human operator)
  */
 
 export async function setupAICreatorPayouts(
   userId: string,
-  stripeConnectId: string
+  paxumEmail: string
 ): Promise<{ success: boolean; error?: string }> {
   try {
-    // Link Stripe Connect to AI creator account
+    // Link Paxum payout email to AI creator account
     const { error } = await supabase
       .from('users')
-      .update({ stripe_connect_id: stripeConnectId })
+      .update({ paxum_email: paxumEmail })
       .eq('id', userId)
 
     if (error) throw error

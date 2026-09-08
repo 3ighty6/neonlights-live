@@ -22,10 +22,10 @@ const PrivacyPolicy: React.FC = () => {
             <ul className="list-disc list-inside space-y-2 ml-4">
               <li><strong>Account Registration:</strong> Name, email, date of birth, username, password, phone number</li>
               <li><strong>Identity & Age Verification:</strong> Government-issued ID, proof of age (for creators and users)</li>
-              <li><strong>Payment Information:</strong> Credit card, billing address, payment history (processed by Stripe, never stored on our servers)</li>
+              <li><strong>Payment Information:</strong> Cryptocurrency wallet address and transaction history (processed by NOWPayments, never stored on our servers)</li>
               <li><strong>Profile Information:</strong> Bio, profile photo, streaming schedule, content tags, streaming preferences</li>
               <li><strong>Communications:</strong> Messages, support tickets, feedback, complaints</li>
-              <li><strong>Creator Information:</strong> Bank details (via Stripe Connect), tax ID (for payouts)</li>
+              <li><strong>Creator Information:</strong> Paxum payout email, tax ID (for payouts)</li>
             </ul>
 
             <h3 className="text-xl font-semibold text-pink-400 mb-2 mt-4">B. Information Collected Automatically</h3>
@@ -39,7 +39,7 @@ const PrivacyPolicy: React.FC = () => {
 
             <h3 className="text-xl font-semibold text-pink-400 mb-2 mt-4">C. Information from Third Parties</h3>
             <ul className="list-disc list-inside space-y-2 ml-4">
-              <li>Payment processors (Stripe): Transaction data, fraud flags</li>
+              <li>Payment processors (NOWPayments, Paxum): Transaction data, fraud flags</li>
               <li>Verification services: Age verification results, identity confirmation</li>
               <li>Analytics providers (Vercel, Supabase logs): Usage patterns, performance metrics</li>
             </ul>
@@ -64,7 +64,7 @@ const PrivacyPolicy: React.FC = () => {
             <h2 className="text-2xl font-bold text-cyan-400 mb-4">4. Data Sharing & Disclosure</h2>
             <p>We do NOT sell your personal data. We may share information with:</p>
             <ul className="list-disc list-inside space-y-2 ml-4">
-              <li><strong>Service Providers:</strong> Stripe (payments), Supabase (hosting), Vercel (CDN), Mux (streaming)</li>
+              <li><strong>Service Providers:</strong> NOWPayments (payments), Paxum (creator payouts), Supabase (hosting), Vercel (CDN), Mux (streaming)</li>
               <li><strong>Legal Obligations:</strong> Law enforcement, courts, regulators (with warrant or court order)</li>
               <li><strong>Business Transfers:</strong> In event of acquisition or bankruptcy, data may be transferred</li>
               <li><strong>Fraud Prevention:</strong> Payment processors and fraud detection services</li>
@@ -157,7 +157,7 @@ const PrivacyPolicy: React.FC = () => {
 
           <section>
             <h2 className="text-2xl font-bold text-cyan-400 mb-4">12. Third-Party Links & Services</h2>
-            <p>Our Platform may link to third-party services (Stripe, Mux, etc.). We are not responsible for their privacy practices. Review their privacy policies separately.</p>
+            <p>Our Platform may link to third-party services (NOWPayments, Paxum, Mux, etc.). We are not responsible for their privacy practices. Review their privacy policies separately.</p>
           </section>
 
           <section>

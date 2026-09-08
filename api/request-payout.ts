@@ -1,16 +1,15 @@
 /**
  * Vercel API Route: /api/request-payout
- * Transfers a creator's available balance (total_earnings minus
- * anything already paid out) to their connected Stripe account.
+ * Queues a creator's available balance (total_earnings minus anything
+ * already paid out) for a manual Paxum payout. Nothing is transferred
+ * automatically here — this inserts a `pending` row that an admin pays
+ * by hand from the Paxum dashboard, then marks completed.
  *
- * Requires STRIPE_SECRET_KEY and SUPABASE_SERVICE_ROLE_KEY in the
- * environment.
+ * Requires SUPABASE_SERVICE_ROLE_KEY in the environment.
  */
 import type { VercelRequest, VercelResponse } from '@vercel/node'
-import Stripe from 'stripe'
 import { createClient } from '@supabase/supabase-js'
 
-const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || ''
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || ''
 const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 const SUPABASE_ANON_KEY = process.env.VITE_SUPABASE_ANON_KEY || ''
@@ -22,7 +21,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' })
   }
 
-  if (!STRIPE_SECRET_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
     return res.status(500).json({ error: 'Payouts not configured' })
   }
 
@@ -49,12 +48,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     const { data: user } = await supabase
       .from('users')
-      .select('total_earnings, stripe_connect_id, stripe_connect_onboarded')
+      .select('total_earnings, paxum_email')
       .eq('id', userId)
       .single()
 
-    if (!user?.stripe_connect_onboarded || !user.stripe_connect_id) {
-      return res.status(400).json({ error: 'Connect a Stripe account before cashing out' })
+    if (!user?.paxum_email) {
+      return res.status(400).json({ error: 'Add your Paxum email in settings before cashing out' })
     }
 
     const { data: priorPayouts } = await supabase
@@ -72,35 +71,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       })
     }
 
-    const stripe = new Stripe(STRIPE_SECRET_KEY)
-
-    // Record as pending before the transfer so a crash between the
-    // Stripe call and this insert can't silently double-pay -- if the
-    // insert fails we still attempt to log it, but the transfer having
-    // already happened is the source of truth Stripe holds regardless.
-    let transfer: Stripe.Transfer
-    try {
-      transfer = await stripe.transfers.create({
-        amount: Math.round(available * 100),
-        currency: 'usd',
-        destination: user.stripe_connect_id,
-        description: `NeonLights creator payout for ${userId}`,
-      })
-    } catch (stripeError) {
-      return res.status(400).json({
-        error: stripeError instanceof Error ? stripeError.message : 'Transfer failed',
-      })
-    }
-
+    // Queue it -- an admin pays this by hand via Paxum, then flips the
+    // row to completed. No money moves automatically from this endpoint.
     await supabase.from('payouts').insert({
       user_id: userId,
       amount_usd: available,
-      status: 'completed',
-      stripe_transfer_id: transfer.id,
-      completed_at: new Date().toISOString(),
+      status: 'pending',
+      payout_method: 'paxum',
+      payout_destination: user.paxum_email,
     })
 
-    res.json({ success: true, amount: available, transferId: transfer.id })
+    res.json({ success: true, amount: available, queued: true })
   } catch (error) {
     console.error('Payout error:', error)
     res.status(500).json({ error: error instanceof Error ? error.message : 'Payout failed' })

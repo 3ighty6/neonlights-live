@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Session } from '@supabase/supabase-js'
 import { ShoppingBag, Lock, Upload, X, Loader2, Trash2 } from 'lucide-react'
 import { supabase } from '../supabaseClient'
-import { TOKEN_PACKAGES, createTokenCheckout } from '../lib/stripe'
+import { TOKEN_PACKAGES, createTokenCheckout } from '../lib/payments'
 import ContentReviews from './ContentReviews'
 
 interface Bundle {
